@@ -1,0 +1,206 @@
+<div class="container">
+  <div class="list">
+    <ul>
+      {{~data.resource.subjects :item :index}}
+      <li data-eq="{{=index}}">
+        <a href="#/details/{{=item.id}}">
+          <img src="{{=item.images.large}}" alt="">
+        </a>
+
+        <div class="meta">
+          <h4><span>{{=item.title}}</span> <em>{{=item.rating.average}}分</em></h4>
+
+          <div class="otherinfo">类型:<span>{{=item.genres[0]}}</span></div>
+        </div>
+      </li>
+      {{~}}
+
+    </ul>
+    <p id="mybtn">点击获取现在时间</p>
+
+    <p id="child"></p>
+  </div>
+
+  <div class="paging">
+    <label>总共：{{=data.resource.total}}条记录</label>
+    <!-- 加上disable类样式，表示按钮禁用状态 -->
+    <input id="next" type="button" value="加载更多">
+  </div>
+</div>
+
+<style scoped>
+
+  .container
+  .list {
+    margin: 0 auto;
+    padding: 20px 25px;
+  }
+
+  .container
+  .list
+  ul {
+    /* Box-model */
+    margin: 0 auto;
+    width: 1080px;
+    overflow: hidden;
+    list-style: none;
+  }
+
+  .list
+  ul
+  li {
+    /* Box-model */
+    margin: 12px 5px;
+    padding: 4px;
+    float: left;
+    /* Visual */
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    /* Misc */
+    transition: all .3s;
+  }
+
+  .list
+  ul
+  li:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .list
+  ul
+  a {
+    display: block;
+  }
+
+  li
+  a
+  img {
+    width: 194px;
+    height: 275.828px;
+  }
+
+  .meta
+  h4 {
+    color: #555;
+  }
+
+  .meta
+  h4
+  span {
+    /* Box-model */
+    display: inline-block;
+    max-width: 100px;
+    overflow: hidden;
+    /* Typography */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .meta
+  h4
+  em {
+    /* Box-model */
+    display: inline-block;
+    float: right;
+    /* Typography */
+    color: #8c8c8c;
+  }
+
+  .meta
+  .otherinfo {
+    margin-top: 3px;
+    color: #7E7E7E;
+  }
+
+  .meta
+  .otherinfo
+  span {
+
+    margin-left: 4px;
+    padding: 1px 3px;
+
+    color: #999;
+    background: #e6e6e6;
+
+    font-size: 12px;
+  }
+
+  .paging {
+    margin-bottom: 100px;
+    text-align: center;
+  }
+
+  #mybtn {
+    text-align: center;
+  }
+
+  #next {
+    display: inline-block;
+    width: 200px;
+    height: 25px;
+    line-height: 25px;
+  }
+
+</style>
+
+<script>
+  module.exports = {
+
+    refs: {
+      child: {
+        el: '#child',
+        component: require('../components/time.html')
+      }
+    },
+
+    data: function () {
+      return this.fetch()
+    },
+
+    mixins: {
+      fetchParams: {
+        count: 10,
+        start: 1
+      },
+
+      fetch: function () {
+        var _this = this
+        return $.ajax({
+          url: "http://api.douban.com/v2/movie/in_theaters",
+          data: _this.fetchParams,
+          type: 'GET',
+          dataType: 'JSONP',
+          success: function (data) {
+            console.log(data)
+          }
+        })
+      }
+
+    },
+
+    events: {
+      'click #mybtn': 'getdata',
+      'click #next': 'moredate',
+    },
+
+    handle: {
+      getdata: function (e) {
+        this.refs.child.data.name = new Date()
+        this.update()
+      },
+
+      moredate: function () {
+        var _this = this
+        this.fetchParams.start++
+        this.fetch().done(function (d) {
+          _this.data.resource.subjects = _this.data.resource.subjects.concat(d.subjects)
+          _this.update()
+        })
+      }
+
+    }
+
+
+  }
+</script>

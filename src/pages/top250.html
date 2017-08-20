@@ -1,0 +1,78 @@
+<div class="contents">
+  <div class="box">
+    <h3>盗版豆瓣吐槽区</h3>
+    <textarea name="" id="txt" cols="50" rows="10"></textarea>
+    <input type='button' id="btn" value='吐槽'>
+    <ul>
+      {{~data :item :index}}
+      <li data-id="{{=index}}">{{=item}}<input class="del-btn" type='button' value='删除'></li>
+      {{~}}
+    </ul>
+  </div>
+</div>
+
+<style scoped>
+
+  ul,
+  li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  ul
+  li {
+    height: 30px;
+    border-bottom: 1px dashed #cccccc;
+    line-height: 30px;
+    word-break: break-all;
+  }
+
+  .del-btn {
+    float: right;
+  }
+
+
+</style>
+
+<script>
+  module.exports = {
+
+    data: [
+      "什么鬼？",
+      "盗版的"
+    ],
+
+    events: {
+      'click #btn': 'adddata',
+      'click .del-btn': 'deldata',
+    },
+
+    handle: {
+
+      adddata: function () {
+        this.data.push($("#txt").val())
+        this.update()
+      },
+
+      deldata: function (e) {
+        var del = confirm("真的删除？");
+        if (del) {
+          var id = $(e.target).parent().data('id')
+          this.data.splice(id, 1)
+          this.update()
+        }
+      }
+    },
+
+    listen: {
+      update: function () {
+        console.log("组件更新了")
+      },
+
+      updated: function () {
+        console.log("完了")
+      },
+    }
+  }
+</script>

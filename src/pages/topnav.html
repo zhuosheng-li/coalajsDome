@@ -1,0 +1,101 @@
+<!-- 顶部导航栏开始 -->
+<div class="top">
+  <nav class="nav">
+    <ul>
+      <!--li中添加 active 类样式，显示焦点状态。-->
+      <li class="active neo"><a href="#/home">首页</a></li>
+      <li class="two"><a href="#/intheaters">top250</a></li>
+      <li class="three"><a href="#/comingsoon">阅读</a></li>
+      <li class="four"><a href="#/top250">评论区</a></li>
+    </ul>
+  </nav>
+</div>
+
+
+<style scoped>
+
+  .nav {
+    position: fixed;
+    top: 50px;
+    width: 1200px;
+    background: #999;
+  }
+
+  .top
+  .nav
+  ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #fff;
+    list-style: none;
+  }
+
+  .nav
+  ul
+  li {
+    height: 40px;
+    float: left;
+    line-height: 40px;
+  }
+
+  .nav
+  ul
+  li.active {
+    background: #0095bb;
+  }
+
+  .nav
+  ul
+  li
+  a {
+    display: block;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  ul
+  li
+  a:hover {
+    background: #0095bb;
+  }
+
+  ul
+  li
+  a.active {
+    background: #0095bb;
+  }
+
+  #app {
+    padding-top: 100px;
+  }
+
+</style>
+
+<script>
+  module.exports = {
+    data: {},
+
+    events: {
+      'click .neo': 'aadd',
+      'click .two': 'badd',
+      'click .three': 'cadd',
+      'click .four': 'dadd',
+    },
+
+    handle: {
+      aadd: function () {
+        $("li").eq(0).addClass("active").siblings().removeClass("active")
+      },
+      badd: function () {
+        $("li").eq(1).addClass("active").siblings().removeClass("active")
+      },
+      cadd: function () {
+        $("li").eq(2).addClass("active").siblings().removeClass("active")
+      },
+      dadd: function () {
+        $("li").eq(3).addClass("active").siblings().removeClass("active")
+      },
+    }
+  }
+</script>
+

@@ -1,0 +1,52 @@
+<div class="top-nav"></div>
+<div class="content"></div>
+
+<style scoped>
+  .content {
+    margin-top: 100px;
+  }
+
+</style>
+<script>
+  var coala = require('./coala')
+
+  var todo = require('./pages/todo.html')
+  var hot = require('./pages/hot.html')
+  var jijiang = require('./pages/jijiang.html')
+  var top250 = require('./pages/top250.html')
+  var children = require('./pages/childern.html')
+
+  coala.douban = coala.mount(todo, '.content')
+  module.exports = {
+    refs: {
+      topnav: {
+        el: '.top-nav',
+        component: require('./pages/topnav.html')
+      }
+    },
+    listen: {
+      todo: function () {
+        coala.douban.unmount()
+        coala.douban = coala.mount(todo, '.content')
+      },
+      hot: function () {
+        coala.douban.unmount()
+        coala.douban = coala.mount(hot, '.content')
+      },
+      jijiang: function () {
+        coala.douban.unmount()
+        coala.douban = coala.mount(jijiang, '.content')
+        // coala.douban.trigger("cscroll")
+      },
+      top250: function () {
+        coala.douban.unmount()
+        coala.douban = coala.mount(top250, '.content')
+      },
+      details: function (id) {
+        children.id = id
+        coala.douban.unmount()
+        coala.douban = coala.mount(children, '.content')
+      }
+    }
+  }
+</script>

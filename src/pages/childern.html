@@ -1,0 +1,128 @@
+<div class="detail">
+  <h1>{{=data.title}}</h1>
+
+  <div class="dt-info">
+    <div class="dti-i">
+      <img src="{{=data.images.large}}" alt="大图">
+    </div>
+    <div class="dti-w">
+      <p>
+        <label>导演：</label>
+        {{~data.directors : item}}
+        <span>{{=item.name}}</span>
+        {{~}}
+      </p>
+
+      <p>
+        <label>主演：</label>
+        {{~data.casts : items}}
+        <span>{{=items.name}}</span>
+        {{~}}
+      </p>
+
+      <p><label>类型：</label>{{=data.genres.join(",")}}</p>
+
+      <p><label>国家：</label>{{=data.countries.join(",")}}</p>
+
+      <p><label>评分：</label>{{=data.rating.average}}</p>
+
+      <p><label>时间：</label>{{=data.year}}</p>
+
+      <p><label>又名：</label>{{=data.aka.join(",")}}</p>
+    </div>
+  </div>
+</div>
+<div class="jq">
+  <h3>剧情简介:</h3>
+
+  <p style="color:#676767">{{=data.summary}}</p>
+</div>
+
+
+<style scoped>
+
+  .detail {
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 10px;
+    width: 80%;
+  }
+
+  .detail
+  h1 {
+    font-size: 25px;
+  }
+
+  .detail
+  h3 {
+    margin: 10px auto;
+    font-size: 16px;
+  }
+
+  .dt-info {
+    margin-top: 15px;
+    height: 285px;
+    overflow: hidden;
+  }
+
+  .dti-i {
+    width: 210px;
+    float: left;
+  }
+
+  .dti-i
+  img {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .dti-w {
+    float: left;
+    margin-left: 15px;
+  }
+
+  .dti-w
+  p {
+    margin: 20px 0;
+  }
+
+  .dti-w
+  label {
+    font-weight: 600;
+  }
+
+  .jq {
+    margin: 0 auto;
+    padding: 10px;
+    width: 80%;
+  }
+</style>
+
+<script>
+
+  module.exports = {
+    data: function () {
+      var id = this.opts.id
+      return $.ajax({
+        url: "http://api.douban.com/v2/movie/subject/" + id,
+        type: 'GET',
+        dataType: 'JSONP',
+        success: function (data) {
+          console.log(data)
+        }
+      })
+    },
+
+    listen: {
+      update: function () {
+        this.data = this.data.resource
+      },
+
+      mount: function () {
+        document.title = this.data.title
+      }
+    }
+  }
+
+
+</script>

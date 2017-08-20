@@ -1,0 +1,192 @@
+<div class="container">
+  <div class="list">
+    <ul>
+      {{~data.resource.subjects :item :index}}
+      <li data-eq="{{=index}}">
+        <a href="#/details/{{=item.id}}">
+          <img src="{{=item.images.large}}" alt="">
+        </a>
+
+        <div class="meta">
+          <h4><span>{{=item.title}}</span> <em>{{=item.rating.average}}分</em></h4>
+
+          <div class="otherinfo">类型:<span>{{=item.genres[0]}}</span></div>
+        </div>
+      </li>
+      {{~}}
+    </ul>
+
+  </div>
+
+  <div class="paging">
+    <label>总共：{{=data.resource.total}}条记录</label>
+    <input id="mybtn" type="button" value="加载更多">
+  </div>
+</div>
+
+<div class="info"></div>
+<div class="message"></div>
+
+<style scoped>
+
+  .container
+  .list {
+    margin: 0 auto;
+    padding: 20px 25px;
+  }
+
+  .container
+  .list
+  ul {
+    list-style: none;
+    margin: 0 auto;
+    width: 1080px;
+    overflow: hidden;
+  }
+
+  .list
+  ul
+  li {
+    margin: 12px 5px;
+    padding: 4px;
+    float: left;
+    background: #fff;
+    transition: all .3s;
+  }
+
+  .list
+  ul
+  li:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .list
+  ul
+  a {
+    display: block;
+  }
+
+  li
+  a
+  img {
+    width: 194px;
+    height: 275px;
+  }
+
+  .meta
+  h4 {
+    color: #555;
+  }
+
+  .meta
+  h4
+  span {
+    display: inline-block;
+    max-width: 100px;
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .meta
+  h4
+  em {
+    float: right;
+    display: inline-block;
+    color: #8c8c8c;
+  }
+
+  .meta
+  .otherinfo {
+    margin-top: 3px;
+    color: #7E7E7E;
+  }
+
+  .meta
+  .otherinfo
+  span {
+    margin-left: 4px;
+    padding: 1px 3px;
+
+    color: #999;
+    background: #e6e6e6;
+
+    font-size: 12px;
+  }
+
+  .paging {
+    text-align: center;
+  }
+
+  #mybtn {
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    height: 30px;
+
+    text-align: center;
+    line-height: 30px;
+  }
+
+  .message {
+    margin-bottom: 50px;
+  }
+
+</style>
+
+<script>
+  module.exports = {
+    refs: {
+      sample: {el: '.info', component: require('../components/footer.html')},
+      samplet: {el: '.message', component: require('../components/tucao.html')},
+    },
+
+    data: function () {
+      return this.fetch();
+    },
+
+    mixins: {
+      fetchParams: {
+        count: 20,
+        start: 1
+      },
+
+      fetch: function () {
+        var _this = this
+        return $.ajax({
+          url: "http://api.douban.com/v2/movie/top250",
+          data: _this.fetchParams,
+          type: 'GET',
+          dataType: 'JSONP',
+          success: function (data) {
+            console.log(data)
+          }
+        })
+      }
+
+    },
+
+    events: {
+      'click #mybtn': 'nextpage',
+      'click #next': 'test'
+    },
+
+    handle: {
+      nextpage: function () {
+        var _this = this
+        this.fetchParams.start++
+        this.fetch().done(function (d) {
+          _this.data.resource.subjects = _this.data.resource.subjects.concat(d.subjects)
+          _this.update()
+        })
+      },
+
+      test: function (e) {
+        //   组件传值
+        this.refs.sample.data.name = new Date()
+        this.update();
+      }
+    }
+  }
+</script>
